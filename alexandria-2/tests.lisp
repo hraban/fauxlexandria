@@ -7,6 +7,51 @@
 
 (in-package :alexandria2-tests)
 
+;; Arrays Tests
+(deftest dim-in-bounds-p.0
+    (dim-in-bounds-p '(2 2) 0 1 1)
+  nil)
+
+(deftest dim-in-bounds-p.1
+    (dim-in-bounds-p '(2 2) 0 1)
+  t)
+
+(deftest dim-in-bounds-p.2
+    (dim-in-bounds-p '(2 2) 0 2)
+  nil)
+
+(deftest row-major-index.0
+    (let* ((dims '(4 3 2 1))
+           (test-arr (make-array dims))
+           (idcs '(0 0 0 0)))
+      (= 0 (apply #'row-major-index dims idcs) (apply #'array-row-major-index test-arr idcs)))
+  t)
+
+(deftest row-major-index.1
+    (let* ((dims '(4 3 2 1))
+           (test-arr (make-array dims))
+           (idcs '(3 2 1 0)))
+      (= 23 (apply #'row-major-index dims idcs) (apply #'array-row-major-index test-arr idcs)))
+  t)
+
+(deftest row-major-index.2
+    (let* ((dims '(4 3 2 1))
+           (test-arr (make-array dims))
+           (idcs '(2 1 0 0)))
+      (= 14 (apply #'row-major-index dims idcs) (apply #'array-row-major-index test-arr idcs)))
+  t)
+
+(deftest row-major-index.3
+    (let* ((dims '(4 3 2 1))
+           (test-arr (make-array dims))
+           (idcs '(0 2 1 0)))
+      (= 5 (apply #'row-major-index dims idcs) (apply #'array-row-major-index test-arr idcs)))
+  t)
+
+(deft)
+
+;; List Tests
+
 (deftest delete-from-plist*.middle
     (let ((input (list 'a 1 'b 2 'c 3 'd 4 'd 5)))
       (multiple-value-list (delete-from-plist* input 'b 'c)))
