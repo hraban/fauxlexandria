@@ -23,3 +23,21 @@
            (incf word-idx (* dim-idx dimprod))
            (setf dimprod (* dimprod dim-size))
         finally (return word-idx)))
+
+(defun rmajor-to-indices (dimensions index)
+  "The inverse function to row-major-index. Given a set of dimensions and a
+   row-major index, produce the list of indices <subscripts> such that
+   (row-major-index dimensions sucscripts) = index"
+  (when (null dimensions) (error "Dimensions must be non-null"))
+  (let ((size (reduce #'* dimensions)))
+    (unless (< -1 index size)
+      (error (format nil "Row-major index ~a invalid for array of total size ~a" index size))))
+  (labels ((rec (dimensions index word-sizes acc)
+             (if (null (cdr dimensions))
+                 (reverse (cons index acc))
+                 (multiple-value-bind (idx remainder) (floor index (car word-sizes))
+                   (rec (cdr dimensions) remainder (cdr word-sizes) (cons idx acc))))))
+    (rec dimensions index
+         (cdr (reduce (lambda (x y) (cons (* x (car y)) y)) dimensions
+                      :initial-value '(1) :from-end t))
+         nil)))

@@ -7,6 +7,7 @@
    ;; arrays
    #:dim-in-bounds-p
    #:row-major-index
+   #:rmajor-to-indices
    ;; lists
    #:delete-from-plist*
    ;; control-flow

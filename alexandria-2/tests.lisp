@@ -48,7 +48,14 @@
       (= 5 (apply #'row-major-index dims idcs) (apply #'array-row-major-index test-arr idcs)))
   t)
 
-(deft)
+(deftest rmajor-to-indices.0
+    (loop for dims in '((70 30 4 2) (50 200 5 7) (5 4 300 2) (5 2 30 19))
+          with index = 173
+          with indices = '(4 0 3 1)
+          always (and (= index (apply #'row-major-index dims (rmajor-to-indices dims index)))
+                      (equalp indices (rmajor-to-indices dims
+                                                         (apply #'row-major-index dims indices)))))
+  t)
 
 ;; List Tests
 
