@@ -8,5 +8,6 @@
    #:delete-from-plist*
    #:line-up-first
    #:line-up-last
+   #:subseq*
     . #. (let (res) (do-external-symbols (sym :alexandria.1.0.0) (push sym res)) res)
    ))

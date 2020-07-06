@@ -124,3 +124,14 @@
   t
   t
   t)
+
+
+(deftest subseq*.1
+    (values (subseq* "abcdef" 0 3)
+            (subseq* "abcdef" 1 3)
+            (subseq* "abcdef" 1)
+            (subseq* "abcdef" 1 9))
+  "abc"
+  "bc"
+  "bcdef"
+  "bcdef")

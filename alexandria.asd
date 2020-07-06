@@ -64,5 +64,6 @@ the following constraints:
             :components ((:static-file "tests.lisp")
                          (:file "package")
                          (:file "control-flow" :depends-on ("package"))
+                         (:file "sequences" :depends-on ("package"))
                          (:file "lists" :depends-on ("package")))))
   :in-order-to ((test-op (test-op "alexandria-tests"))))
