@@ -1614,7 +1614,8 @@
   (nil t))
 
 (deftest with-unique-names.3
-    (let ((*gensym-counter* 0))
+    (let ((*gensym-counter* 0)
+          (*error-output* (make-broadcast-stream)))
       (multiple-value-bind (res err)
           (ignore-errors
             (eval
