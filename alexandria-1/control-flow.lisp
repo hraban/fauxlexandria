@@ -78,10 +78,11 @@ argument evaluates to a true value no further DATUMS are evaluated, and NIL is
 returned as both primary and secondary value. If exactly one argument
 evaluates to true, its value is returned as the primary value after all the
 arguments have been evaluated, and T is returned as the secondary value. If no
-arguments evaluate to true NIL is retuned as primary, and T as secondary
+arguments evaluate to true NIL is returned as primary, and T as secondary
 value."
   (with-gensyms (xor tmp true)
     `(let (,tmp ,true)
+       (declare (ignorable ,tmp))
        (block ,xor
          ,@(mapcar (lambda (datum)
                      `(if (setf ,tmp ,datum)
