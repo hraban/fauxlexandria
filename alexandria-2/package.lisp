@@ -5,7 +5,13 @@
   #+sb-package-locks
   (:lock t)
   (:export
+   ;; arrays
+   #:dim-in-bounds-p
+   #:row-major-index
+   #:rmajor-to-indices
+   ;; lists
    #:delete-from-plist*
+   ;; control-flow
    #:line-up-first
    #:line-up-last
    #:subseq*
