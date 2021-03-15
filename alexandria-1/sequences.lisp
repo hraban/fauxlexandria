@@ -81,19 +81,28 @@ share structure with it."
 
 (defun shuffle (sequence &key (start 0) end)
   "Returns a random permutation of SEQUENCE bounded by START and END.
-Original sequence may be destructively modified, and (if it contains
-CONS or lists themselv) share storage with the original one.
+Original sequence may be destructively modified.
 Signals an error if SEQUENCE is not a proper sequence."
   (declare (type fixnum start)
            (type (or fixnum null) end))
   (etypecase sequence
     (list
      (let* ((end (or end (proper-list-length sequence)))
-            (n (- end start)))
-       (do ((tail (nthcdr start sequence) (cdr tail)))
-           ((zerop n))
-         (rotatef (car tail) (car (nthcdr (random n) tail)))
-         (decf n))))
+            (n (- end start))
+            (sublist (nthcdr start sequence))
+            (small-enough-threshold 100))
+       ;; It's fine to use a pure list shuffle if the number of items
+       ;; to shuffle is small enough, but otherwise it's more
+       ;; time-efficient to create an intermediate vector to work on.
+       ;; I picked the threshold based on rudimentary benchmarks on my
+       ;; machine, where both branches take about the same time.
+       (if (< n small-enough-threshold)
+           (do ((tail sublist (cdr tail)))
+               ((zerop n))
+             (rotatef (car tail) (car (nthcdr (random n) tail)))
+             (decf n))
+           (let ((intermediate-vector (replace (make-array n) sublist)))
+             (replace sublist (shuffle intermediate-vector))))))
     (vector
      (let ((end (or end (length sequence))))
        (loop for i from start below end
