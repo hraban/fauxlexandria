@@ -23,7 +23,7 @@
   nil t)
 
 (deftest copy-array.2
-    (let ((orig (make-array 1024 :fill-pointer 0)))
+    (let ((orig (make-array 1024 :fill-pointer 0 :initial-element nil)))
       (vector-push-extend 1 orig)
       (vector-push-extend 2 orig)
       (vector-push-extend 3 orig)
