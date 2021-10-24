@@ -53,10 +53,10 @@ which is only sent to WITH-OPEN-FILE when it's not NIL."
 (defun read-stream-content-into-string (stream &key (buffer-size 4096))
   "Return the \"content\" of STREAM as a fresh string."
   (check-type buffer-size positive-integer)
-  (let ((*print-pretty* nil))
-    (with-output-to-string (datum nil
-                                  :element-type (stream-element-type stream))
-      (let ((buffer (make-array buffer-size :element-type 'character)))
+  (let ((*print-pretty* nil)
+        (element-type (stream-element-type stream)))
+    (with-output-to-string (datum nil :element-type element-type)
+      (let ((buffer (make-array buffer-size :element-type element-type)))
         (loop
           :for bytes-read = (read-sequence buffer stream)
           :do (write-sequence buffer datum :start 0 :end bytes-read)
