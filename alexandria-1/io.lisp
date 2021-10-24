@@ -67,7 +67,9 @@ which is only sent to WITH-OPEN-FILE when it's not NIL."
 The EXTERNAL-FORMAT parameter will be passed directly to WITH-OPEN-FILE
 unless it's NIL, which means the system default."
   (with-input-from-file
-      (file-stream pathname :external-format external-format)
+      (file-stream pathname
+                   :external-format external-format
+                   :element-type ':default)
     (read-stream-content-into-string file-stream :buffer-size buffer-size)))
 
 (defun write-string-into-file (string pathname &key (if-exists :error)
@@ -79,7 +81,8 @@ The EXTERNAL-FORMAT parameter will be passed directly to WITH-OPEN-FILE
 unless it's NIL, which means the system default."
   (with-output-to-file (file-stream pathname :if-exists if-exists
                                     :if-does-not-exist if-does-not-exist
-                                    :external-format external-format)
+                                    :external-format external-format
+                                    :element-type ':default)
     (write-sequence string file-stream)))
 
 (defun read-stream-content-into-byte-vector (stream &key ((%length length))
