@@ -19,7 +19,7 @@ The THREAD-FIRST-P decides where to thread the FORMS, accumulating in ACC."
   "Lines up FORMS elements as the first argument of their successor.
 Example:
 
- (thread-first
+ (line-up-first
    5
    (+ 20)
    /
@@ -37,7 +37,7 @@ threading."
   "Lines up FORMS elements as the last argument of their successor.
 Example:
 
- (thread-last
+ (line-up-last
    5
    (+ 20)
    /
