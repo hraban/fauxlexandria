@@ -2031,9 +2031,12 @@
   t
   t)
 
+;; In CLISP, (eql #C(2 0) 2) => T
+;; but       (eql #C(2 0) 2.0) => NIL
+;; so we need a complex start point
 (deftest iota.fp-start-and-complex-integer-step
     (equal '(#C(0.0 0.0) #C(0.0 2.0) #C(0.0 4.0))
-           (iota 3 :start 0.0 :step #C(0 2)))
+           (iota 3 :start #C(0.0 0.0) :step #C(0 2)))
   t)
 
 (deftest parse-ordinary-lambda-list.1
