@@ -1,11 +1,11 @@
 (in-package :cl-user)
 
-(defpackage :alexandria2-tests
+(defpackage :alexandria-2/tests
   (:use :cl :alexandria-2 #+sbcl :sb-rt #-sbcl :rtest)
   (:import-from #+sbcl :sb-rt #-sbcl :rtest
                 #:*compile-tests* #:*expected-failures*))
 
-(in-package :alexandria2-tests)
+(in-package :alexandria-2/tests)
 
 ;; Arrays Tests
 (deftest dim-in-bounds-p.0
