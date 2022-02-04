@@ -1,11 +1,11 @@
 (in-package :cl-user)
 
-(defpackage :alexandria-tests
+(defpackage :alexandria/tests
   (:use :cl :alexandria #+sbcl :sb-rt #-sbcl :rtest)
   (:import-from #+sbcl :sb-rt #-sbcl :rtest
                 #:*compile-tests* #:*expected-failures*))
 
-(in-package :alexandria-tests)
+(in-package :alexandria/tests)
 
 (defun run-tests (&key ((:compiled *compile-tests*)))
   (do-tests))
