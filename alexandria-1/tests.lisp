@@ -1558,6 +1558,21 @@
   "foo bar"
   "foo bar")
 
+(deftest read-stream-content-into-string.1-umlauts
+    (values (with-input-from-string (stream "föö βαρ")
+              (read-stream-content-into-string stream))
+            (with-input-from-string (stream "föö βαρ")
+              (read-stream-content-into-string stream :buffer-size 1))
+            (with-input-from-string (stream "föö βαρ")
+              (read-stream-content-into-string stream :buffer-size 6))
+            (with-input-from-string (stream "föö βαρ")
+              (read-stream-content-into-string stream :buffer-size 7)))
+  "föö βαρ"
+  "föö βαρ"
+  "föö βαρ"
+  "föö βαρ")
+
+
 (deftest read-stream-content-into-string.2
     (handler-case
         (let ((stream (make-broadcast-stream)))
