@@ -6,16 +6,16 @@
 (defmacro with-open-file* ((stream filespec &key direction element-type
                                    if-exists if-does-not-exist external-format)
                            &body body)
-  "Just like WITH-OPEN-FILE, but NIL values in the keyword arguments mean to use
-the default value specified for OPEN."
+  "Just like WITH-OPEN-FILE, but NIL values in the keyword arguments
+mean to use the default value specified for OPEN."
   (once-only (direction element-type if-exists if-does-not-exist external-format)
     `(with-open-stream
          (,stream (apply #'open ,filespec
                          (append
                           (when ,direction
                             (list :direction ,direction))
-                          (when ,element-type
-                            (list :element-type ,element-type))
+                          (list :element-type (or ,element-type
+                                                  (default-element-type)))
                           (when ,if-exists
                             (list :if-exists ,if-exists))
                           (when ,if-does-not-exist
@@ -23,6 +23,16 @@ the default value specified for OPEN."
                           (when ,external-format
                             (list :external-format ,external-format)))))
        ,@body)))
+
+(defun default-element-type ()
+  ;; On Lispworks, ELEMENT-TYPE :DEFAULT selects the appropriate
+  ;; subtype of CHARACTER for the given external format which can
+  ;; represent all possible characters.
+  #+lispworks :default
+  ;; The spec says that OPEN's default ELEMENT-TYPE (when it is not
+  ;; specified) is CHARACTER, but on AllegroCL it's (UNSIGNED-BYTE 8).
+  ;; No harm done by specifying it on other implementations.
+  #-lispworks 'character)
 
 (defmacro with-input-from-file ((stream-name file-name &rest args
                                              &key (direction nil direction-p)
@@ -67,10 +77,7 @@ which is only sent to WITH-OPEN-FILE when it's not NIL."
 
 The EXTERNAL-FORMAT parameter will be passed directly to WITH-OPEN-FILE
 unless it's NIL, which means the system default."
-  (with-input-from-file
-      (file-stream pathname
-                   :external-format external-format
-                   :element-type ':default)
+  (with-input-from-file (file-stream pathname :external-format external-format)
     (read-stream-content-into-string file-stream :buffer-size buffer-size)))
 
 (defun write-string-into-file (string pathname &key (if-exists :error)
@@ -82,8 +89,7 @@ The EXTERNAL-FORMAT parameter will be passed directly to WITH-OPEN-FILE
 unless it's NIL, which means the system default."
   (with-output-to-file (file-stream pathname :if-exists if-exists
                                     :if-does-not-exist if-does-not-exist
-                                    :external-format external-format
-                                    :element-type ':default)
+                                    :external-format external-format)
     (write-sequence string file-stream)))
 
 (defun read-stream-content-into-byte-vector (stream &key ((%length length))
