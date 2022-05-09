@@ -780,7 +780,7 @@ followed another tabulation label or a tabulation body."
           (format *texinfo-output* "@end itemize~%~%"))))))
 
 (defun texinfo-body (doc)
-  (write-texinfo-string (get-string doc)))
+  (write-texinfo-string (get-string doc) (lambda-list doc)))
 
 (defun texinfo-end (doc)
   (write-line (case (get-kind doc)
