@@ -95,29 +95,35 @@ unless it's NIL, which means the system default."
 (defun read-stream-content-into-byte-vector (stream &key ((%length length))
                                                          (initial-size 4096))
   "Return \"content\" of STREAM as freshly allocated (unsigned-byte 8) vector."
-  (check-type length (or null non-negative-integer))
-  (check-type initial-size positive-integer)
-  (do ((buffer (make-array (or length initial-size)
-                           :element-type '(unsigned-byte 8)))
-       (offset 0)
-       (offset-wanted 0))
-      ((or (/= offset-wanted offset)
-           (and length (>= offset length)))
-       (if (= offset (length buffer))
-           buffer
-           (subseq buffer 0 offset)))
-    (unless (zerop offset)
-      (let ((new-buffer (make-array (* 2 (length buffer))
-                                    :element-type '(unsigned-byte 8))))
-        (replace new-buffer buffer)
-        (setf buffer new-buffer)))
-    (setf offset-wanted (length buffer)
-          offset (read-sequence buffer stream :start offset))))
+  (check-type length (or null non-negative-integer)) ; for compatibility
+  (check-type initial-size non-negative-integer)
+  (setf initial-size (or length initial-size))
+  (let ((result (make-array initial-size :element-type '(unsigned-byte 8)))
+        (bytes-read 0))
+    (loop
+      (setf bytes-read (read-sequence result stream :start bytes-read))
+      (when (and length (>= bytes-read length))
+        (return))
+      ;; There is no PEEK-BYTE, so we just try to read a byte.
+      (let ((next-byte (read-byte stream nil nil)))
+        (when (null next-byte)
+          (return))
+        (let ((new-result (make-array (if (zerop (length result))
+                                          4096
+                                          (* 2 (length result)))
+                                      :element-type '(unsigned-byte 8))))
+          (replace new-result result :end1 bytes-read :end2 bytes-read)
+          (setf (aref new-result bytes-read) next-byte
+                result new-result)
+          (incf bytes-read))))
+    (if (= bytes-read (length result))
+        result
+        (subseq result 0 bytes-read))))
 
 (defun read-file-into-byte-vector (pathname)
   "Read PATHNAME into a freshly allocated (unsigned-byte 8) vector."
   (with-input-from-file (stream pathname :element-type '(unsigned-byte 8))
-    (read-stream-content-into-byte-vector stream '%length (file-length stream))))
+    (read-stream-content-into-byte-vector stream :initial-size (file-length stream))))
 
 (defun write-byte-vector-into-file (bytes pathname &key (if-exists :error)
                                                        if-does-not-exist)
