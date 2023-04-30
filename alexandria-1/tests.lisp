@@ -283,7 +283,7 @@
             (eql-copy (copy-hash-table orig :test 'eql))
             (equal-copy (copy-hash-table orig :test 'equal))
             (equalp-copy (copy-hash-table orig :test 'equalp)))
-        (list (eql (hash-table-size eq-copy) (hash-table-size orig))
+        (list #-allegro (eql (hash-table-size eq-copy) (hash-table-size orig))
               (eql (hash-table-rehash-size eq-copy)
                    (hash-table-rehash-size orig))
               (hash-table-count eql-copy)
@@ -293,7 +293,7 @@
               (gethash (copy-seq foo) equal-copy)
               (gethash "FOO" equal-copy)
               (gethash "FOO" equalp-copy))))
-  (t t 2 t nil t t nil t))
+  (#-allegro t t 2 t nil t t nil t))
 
 (deftest copy-hash-table.2
     (let ((ht (make-hash-table))
@@ -1605,8 +1605,13 @@
         (let ((stream (make-broadcast-stream)))
           (read-stream-content-into-byte-vector stream :initial-size 0))
       (type-error ()
-        :type-error))
-  :type-error)
+        :type-error)
+      (program-error ()
+        :program-error))
+  #-allegro
+  :type-error
+  #+allegro
+  :program-error)
 
 ;;;; Macros
 
@@ -1789,8 +1794,7 @@
   t)
 
 (deftest type=.4
-    (type= 'string '(satisfies emptyp))
-  nil
+    (nth-value 0 (type= 'string '(satisfies emptyp)))
   nil)
 
 (deftest type=.5
