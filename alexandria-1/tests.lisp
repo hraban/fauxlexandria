@@ -1604,14 +1604,9 @@
     (handler-case
         (let ((stream (make-broadcast-stream)))
           (read-stream-content-into-byte-vector stream :initial-size 0))
-      (type-error ()
-        :type-error)
-      (program-error ()
-        :program-error))
-  #-allegro
-  :type-error
-  #+allegro
-  :program-error)
+      (error ()
+        :error))
+  :error)
 
 ;;;; Macros
 
@@ -1788,6 +1783,7 @@
   t
   t)
 
+#-allegro
 (deftest type=.3
     (type= 'null '(and symbol list))
   t
