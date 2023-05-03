@@ -283,7 +283,7 @@
             (eql-copy (copy-hash-table orig :test 'eql))
             (equal-copy (copy-hash-table orig :test 'equal))
             (equalp-copy (copy-hash-table orig :test 'equalp)))
-        (list #-allegro (eql (hash-table-size eq-copy) (hash-table-size orig))
+        (list
               (eql (hash-table-rehash-size eq-copy)
                    (hash-table-rehash-size orig))
               (hash-table-count eql-copy)
@@ -293,7 +293,7 @@
               (gethash (copy-seq foo) equal-copy)
               (gethash "FOO" equal-copy)
               (gethash "FOO" equalp-copy))))
-  (#-allegro t t 2 t nil t t nil t))
+  (t 2 t nil t t nil t))
 
 (deftest copy-hash-table.2
     (let ((ht (make-hash-table))
