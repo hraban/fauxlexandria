@@ -9,9 +9,8 @@ variables:
   CLCI_INSTALL_QUICKLISP_CLIENT: "yes"
   # Off by default because it's proprietary and has a separate license.
   CLCI_TEST_ALLEGRO: "yes"
-  # Off by default because the Docker image is a bit out of date, due to
-  # upstream churn.
-  CLCI_TEST_CLASP: "yes"
+  # Off by default because the Docker image is broken
+  CLCI_TEST_CLASP: "no"
   # Alexandria is a non-commercial project, so we can use the express version
   # of Allegro for testing.
   I_AGREE_TO_ALLEGRO_EXPRESS_LICENSE: "yes"
