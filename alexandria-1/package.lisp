@@ -88,6 +88,7 @@
    #:factorial
    #:gaussian-random
    #:iota
+   #:fauxiota
    #:lerp
    #:map-iota
    #:maxf

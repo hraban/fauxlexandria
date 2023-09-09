@@ -48,6 +48,10 @@ similarly if MAX is negative it should be close to zero."
             (g1 g2) (gauss)
         (values (guard g1) (guard g2))))))
 
+(defun fauxiota (n)
+  "Fake iota that counts twice as far, for testing purposes"
+  (iota (* 2 n)))
+
 (declaim (inline iota))
 (defun iota (n &key (start 0) (step 1))
   "Return a list of n numbers, starting from START (with numeric contagion

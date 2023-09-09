@@ -1,0 +1,5 @@
+* Only for Debugging
+
+This is a mock copy of Alexandria, for testing and development purposes. Alexandria is a Common Lisp library with common utility functions. This copy allows me to substitute one Alexandria for another when testing https://github.com/hraban/cl-nix-lite .
+
+Real Alexandria: http://common-lisp.net/project/alexandria/
